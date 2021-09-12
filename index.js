@@ -192,31 +192,38 @@ let db = new sqlite3.Database('./db/chinook.db', (err) => {
 });
 
 
-    //db.run('CREATE TABLE mybase(name text)');
+    db.run('CREATE TABLE mybase(name text)', function(err) {
+    if (err)
+    {
+
+      db.run(`INSERT INTO mybase(name) VALUES(?)`, ['primer'], function(err) {
+      if (err) {
+        return console.log(err.message);
+      }
+      // get the last insert id
+      console.log(`A row has been inserted with rowid ${this.lastID}`);
+      });
 
 
 
-    db.run(`INSERT INTO mybase(name) VALUES(?)`, ['primer'], function(err) {
-    if (err) {
-      return console.log(err.message);
+      let sql = `SELECT name name FROM mybase ORDER BY name`;
+      db.all(sql, [], (err, rows) => {
+      if (err) {
+       throw err;
+      }
+      rows.forEach((row) => {
+       console.log(row.name);
+      });
+      });
+
+
     }
-    // get the last insert id
-    console.log(`A row has been inserted with rowid ${this.lastID}`);
-  });
+    else
+    {
 
+    }
 
-
- let sql = `SELECT name name FROM mybase ORDER BY name`;
- db.all(sql, [], (err, rows) => {
-   if (err) {
-     throw err;
-   }
-   rows.forEach((row) => {
-     console.log(row.name);
-   });
- });
-
-
+    });
 
 
 
