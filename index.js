@@ -172,6 +172,17 @@ async function getElements()
 
 
 
+
+})();
+
+
+
+
+
+
+
+
+
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./db/chinook.db', (err) => {
   if (err) {
@@ -180,10 +191,11 @@ let db = new sqlite3.Database('./db/chinook.db', (err) => {
   console.log('Connected to the chinook database.');
 });
 
-    
-    db.run('CREATE TABLE mybase(name text)');
-    
-    
+
+    //db.run('CREATE TABLE mybase(name text)');
+
+
+
     db.run(`INSERT INTO mybase(name) VALUES(?)`, ['primer'], function(err) {
     if (err) {
       return console.log(err.message);
@@ -191,10 +203,10 @@ let db = new sqlite3.Database('./db/chinook.db', (err) => {
     // get the last insert id
     console.log(`A row has been inserted with rowid ${this.lastID}`);
   });
-    
-    
-    
- let sql = `SELECT pair name FROM mybase ORDER BY name`;
+
+
+
+ let sql = `SELECT name name FROM mybase ORDER BY name`;
  db.all(sql, [], (err, rows) => {
    if (err) {
      throw err;
@@ -204,10 +216,10 @@ let db = new sqlite3.Database('./db/chinook.db', (err) => {
    });
  });
 
-    
-  
 
-})();
+
+
+
 
 
 function sendJson()
