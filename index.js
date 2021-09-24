@@ -1,10 +1,10 @@
 const AmoCRM = require( 'amocrm-js' );
 const crm = new AmoCRM({
-    domain: 'fincellandrew',
+    domain: 'sortageru',
     auth: {
-      client_id: 'b57aed5a-7d0b-4e59-8bcd-4908b54d4f5a',
-      client_secret: 'pfoPQWTyYpFASCg4sY8oYoZEARoiplHQKq1rbBIsRIveM7XGqWSi9z1RrguKRIiD',
-      redirect_uri: 'https://c8d4-212-106-41-155.ngrok.io',
+      client_id: 'b8f8c774-92d9-4b0d-881e-ceea9e3ff879',
+      client_secret: 'sZ6hA1RCC6LNI9danvMB6p0F5qSJnue3PO1arnnGgCdN0WCTgcXAqWb3J0uyKu0Y',
+      redirect_uri: 'https://fornex.com/api/vps/34-202853/',
       server: {
         port: 3000
       }
@@ -25,6 +25,7 @@ const crm = new AmoCRM({
   //console.log(order4.data._embedded.custom_fields);
 
 
+
       const express = require( 'express' );
       const PORT = 3000;
       const app = express()
@@ -35,22 +36,9 @@ const crm = new AmoCRM({
       var resp = JSON.stringify(req.body); //преобразует в строку
 
       var obj = JSON.parse(resp)
+      var leadid = obj.leads.status[0].id;
 
-      if(typeof obj.leads === 'undefined')
-      {
-      }
-      else
-      {
-        if(typeof obj.leads.update === 'undefined')
-        {
-        }
-        else
-        {
-          var leadid = obj.leads.update[0].id;
-          //console.log(obj.leads.status[0].name);
-          getlead(leadid);
-        }
-      }
+      getlead(leadid);
 
       res.json({ message: 'goodbye'})
       })
@@ -63,15 +51,64 @@ const crm = new AmoCRM({
 async function getlead(leadid)
 {
   const leadinfo = await crm.request.get('/api/v4/leads/' + leadid);
-/*
-  var _name = leadinfo.data.name
-  var _price = leadinfo.data.price
-  var _seller = leadinfo.data.custom_fields_values[0].field_name
-  var _size = leadinfo.data.custom_fields_values[1].field_name
-  var _price_buy = leadinfo.data.custom_fields_values[2].field_name
-  var _payment = leadinfo.data.custom_fields_values[3].field_name
-  */
-  console.log(leadinfo.data._embedded);
+
+
+ var type_price = null;
+ var type_delivery = null;
+ var comment = null;
+ var comment_delivery = null;
+
+  var array = leadinfo.data.custom_fields_values;
+
+  if ( array != null )
+  {
+    array.forEach(expr  => {
+    switch (expr.field_name)
+    {
+      case 'Тип оплаты':
+        type_price = expr.values[0].value;
+        break;
+
+      case 'Тип доставки':
+        type_delivery = expr.values[0].value;
+        break;
+
+      case 'Комментарий':
+        comment = expr.values[0].value;
+        break;
+
+      case 'Комментарий (доставка)':
+        comment_delivery = expr.values[0].value;
+        break;
+
+      default:
+        console.log(`Sorry, we are out of ${expr}.`);
+    }
+   }
+   );
+  }
+
+
+  let unix_timestamp = leadinfo.data.created_at;
+  var date = new Date(unix_timestamp * 1000);
+  var hours = date.getHours();
+  var minutes = "0" + date.getMinutes();
+  var seconds = "0" + date.getSeconds();
+  var data_created = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+  var manager_id = leadinfo.data.responsible_user_id;
+  const managerinfo = await crm.request.get('/api/v4/users/' + manager_id);
+  var manager_name = managerinfo.data.name
+
+
+
+  //sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid);
+
+
+const leadsall = await crm.request.get('/api/v4/contacts/15124417?with=leads');
+
+ console.log(leadinfo.data);
+ //console.log(leadsall.data);
 }
 
 
@@ -182,7 +219,7 @@ async function getElements()
 
 
 
-
+/*
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./db/chinook.db', (err) => {
   if (err) {
@@ -224,12 +261,12 @@ let db = new sqlite3.Database('./db/chinook.db', (err) => {
     }
 
     });
+*/
 
 
 
 
-
-function sendJson()
+function sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid)
 {
 
 
@@ -238,9 +275,16 @@ var options = {
     method: 'POST',
     uri: 'https://script.google.com/macros/s/AKfycbxQkijCE7rBUzbEirorvU1gHZLjTjlZGI2X7tODfJ6SBXM06xRyoT-ijt272PDzdhL9mw/exec',
     body: {
-        some: 'primer'
+        manager_id: manager_id,
+        type_price: type_price,
+        type_delivery: type_delivery,
+        comment: comment,
+        manager_name: manager_name,
+        data_created: data_created,
+        comment_delivery: comment_delivery,
+        lead_id: leadid
     },
-    json: true // Automatically stringifies the body to JSON
+    json: true
 };
 
 rp(options)
@@ -252,8 +296,4 @@ rp(options)
     });
 
 
-
-
 };
-
-sendJson();
