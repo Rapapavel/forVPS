@@ -4,7 +4,7 @@ const crm = new AmoCRM({
     auth: {
       client_id: 'b8f8c774-92d9-4b0d-881e-ceea9e3ff879',
       client_secret: 'sZ6hA1RCC6LNI9danvMB6p0F5qSJnue3PO1arnnGgCdN0WCTgcXAqWb3J0uyKu0Y',
-      redirect_uri: 'https://ed40-2a01-ba80-e-17-1b1-00-1.ngrok.io',
+      redirect_uri: 'https://00fb-31-172-66-138.ngrok.io',
       server: {
         port: 3000
       }
@@ -105,7 +105,7 @@ async function getlead(leadid)
   sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid);
 
 
-const leadsall = await crm.request.get('/api/v4/contacts/15124417?with=leads');
+//const leadsall = await crm.request.get('/api/v4/contacts/15124417?with=leads');
 
  //console.log(leadinfo.data);
  //console.log(leadsall.data);
