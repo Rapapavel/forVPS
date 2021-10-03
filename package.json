@@ -11,9 +11,11 @@
   "dependencies": {
     "amocrm-js": "^2.0.9",
     "express": "^4.17.1",
+    "https": "^1.0.0",
     "node-fetch": "^3.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
+    "requestify": "^0.2.5",
     "sqlite3": "^5.0.2"
   }
 }
