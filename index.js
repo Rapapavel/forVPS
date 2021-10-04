@@ -4,9 +4,9 @@ const crm = new AmoCRM({
     auth: {
       client_id: 'b8f8c774-92d9-4b0d-881e-ceea9e3ff879',
       client_secret: 'sZ6hA1RCC6LNI9danvMB6p0F5qSJnue3PO1arnnGgCdN0WCTgcXAqWb3J0uyKu0Y',
-      redirect_uri: 'https://203065.fornex.cloud',
+      redirect_uri: 'https://8bd2-2a01-ba80-e-17-230-00-1.ngrok.io',
       server: {
-        port: 443
+        port: 3001
       }
     },
 });
@@ -28,7 +28,7 @@ const crm = new AmoCRM({
 
 
       const express = require( 'express' );
-      const PORT = 443;
+      const PORT = 3001;
       const app = express()
       var bodyParser = require('body-parser');
       app.use(bodyParser.urlencoded({ extended: true }));
