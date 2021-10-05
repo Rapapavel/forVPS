@@ -1,9 +1,9 @@
 const AmoCRM = require( 'amocrm-js' );
 const crm = new AmoCRM({
-    domain: 'sortageru',
+    domain: 'zachem100',
     auth: {
-      client_id: 'b8f8c774-92d9-4b0d-881e-ceea9e3ff879',
-      client_secret: 'sZ6hA1RCC6LNI9danvMB6p0F5qSJnue3PO1arnnGgCdN0WCTgcXAqWb3J0uyKu0Y',
+      client_id: '82695ffc-d4f3-43a3-b52a-bee548e7bbf4',
+      client_secret: 'Zx50YCccLr2rt9CihDvebNyMOpoZwJNHqezqS989u56i54xX0s2c3Pi8T9UAY6b5',
       redirect_uri: 'https://203065.fornex.cloud',
       server: {
         port: 3000
@@ -189,7 +189,7 @@ async function getlead(leadid)
 
   const request = require('request');
   var auth = 'Bearer ' + mytoken.access_token;
-  var adress = 'https://sortageru.amocrm.ru/api/v4/leads/' + leadid + '?with=contacts'
+  var adress = 'https://zachem100.amocrm.ru/api/v4/leads/' + leadid + '?with=contacts'
   var options = {
     url: adress,
     method: 'GET',
