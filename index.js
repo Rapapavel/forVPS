@@ -4,7 +4,7 @@ const crm = new AmoCRM({
     auth: {
       client_id: '82695ffc-d4f3-43a3-b52a-bee548e7bbf4',
       client_secret: 'Zx50YCccLr2rt9CihDvebNyMOpoZwJNHqezqS989u56i54xX0s2c3Pi8T9UAY6b5',
-      redirect_uri: 'https://203065.fornex.cloud',
+      redirect_uri: 'http://203065.fornex.cloud',
       server: {
         port: 80
       }
