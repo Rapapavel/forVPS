@@ -221,100 +221,111 @@ async function getlead(leadid)
     var callback = async (error, response, body) =>
     {
 
-    var getuserid = body._embedded.contacts[0].id;
-    const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
-
-
-
-  var username = null;
-  var userphone = null;
-
-  if (userinfo.data.name !== undefined)
-  {
-    username = userinfo.data.name;
-  }
-
-  if (userinfo.data.custom_fields_values !== null)
-  {
-    userphone = userinfo.data.custom_fields_values[0].values[0].value;
-  }
-
-
-
-   const leadinfo = await crm.request.get('/api/v4/leads/' + leadid);
-
-   var type_price = null;
-   var type_delivery = null;
-   var comment = null;
-   var comment_delivery = null;
-   var source = null;
-   var type = null;
-
-  if ( leadinfo.data.custom_fields_values !== undefined)
-  {
-
-    var array = leadinfo.data.custom_fields_values;
-
-    if ( array != null )
-    {
-      array.forEach(expr  => {
-      switch (expr.field_name)
+      try
       {
-        case 'Тип оплаты':
-          type_price = expr.values[0].value;
-          break;
 
-        case 'Тип доставки':
-          type_delivery = expr.values[0].value;
-          break;
+        var getuserid = body._embedded.contacts[0].id;
+        const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
 
-        case 'Комментарий':
-          comment = expr.values[0].value;
-          break;
 
-        case 'Примечание по доставке':
-          comment_delivery = expr.values[0].value;
-          break;
 
-        case 'Телефон (доп)':
-          userphone = expr.values[0].value;
-          break;
+      var username = null;
+      var userphone = null;
 
-        case 'Источник':
-          source = expr.values[0].value;
-          break;
-
-        case 'Тип':
-          type = expr.values[0].value;
-          break;
-
-        default:
-          console.log(`Sorry, we are out of ${expr}.`);
+      if (userinfo.data.name !== undefined)
+      {
+        username = userinfo.data.name;
       }
-     }
-     );
-    }
-  }
+
+      if (userinfo.data.custom_fields_values !== null)
+      {
+        userphone = userinfo.data.custom_fields_values[0].values[0].value;
+      }
 
 
 
-    let unix_timestamp = leadinfo.data.created_at;
-    var date = new Date(unix_timestamp * 1000);
-    var hours = date.getHours();
-    var minutes = "0" + date.getMinutes();
-    var seconds = "0" + date.getSeconds();
-    var data_created = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+       const leadinfo = await crm.request.get('/api/v4/leads/' + leadid);
 
-    var manager_id = leadinfo.data.responsible_user_id;
-    const managerinfo = await crm.request.get('/api/v4/users/' + manager_id);
-    var manager_name = managerinfo.data.name
-    var manager2_name = null;
+       var type_price = null;
+       var type_delivery = null;
+       var comment = null;
+       var comment_delivery = null;
+       var source = null;
+       var type = null;
+
+      if ( leadinfo.data.custom_fields_values !== undefined)
+      {
+
+        var array = leadinfo.data.custom_fields_values;
+
+        if ( array != null )
+        {
+          array.forEach(expr  => {
+          switch (expr.field_name)
+          {
+            case 'Тип оплаты':
+              type_price = expr.values[0].value;
+              break;
+
+            case 'Тип доставки':
+              type_delivery = expr.values[0].value;
+              break;
+
+            case 'Комментарий':
+              comment = expr.values[0].value;
+              break;
+
+            case 'Примечание по доставке':
+              comment_delivery = expr.values[0].value;
+              break;
+
+            case 'Телефон (доп)':
+              userphone = expr.values[0].value;
+              break;
+
+            case 'Источник':
+              source = expr.values[0].value;
+              break;
+
+            case 'Тип':
+              type = expr.values[0].value;
+              break;
+
+            default:
+              console.log(`Sorry, we are out of ${expr}.`);
+          }
+         }
+         );
+        }
+      }
+
+
+
+        let unix_timestamp = leadinfo.data.created_at;
+        var date = new Date(unix_timestamp * 1000);
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var seconds = "0" + date.getSeconds();
+        var data_created = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+        var manager_id = leadinfo.data.responsible_user_id;
+        const managerinfo = await crm.request.get('/api/v4/users/' + manager_id);
+        var manager_name = managerinfo.data.name
+        var manager2_name = null;
 
 
 
 
-    sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid, username, userphone, source, manager2_name);
-    //console.log(leadinfo.data);
+        sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid, username, userphone, source, manager2_name);
+        //console.log(leadinfo.data);
+
+      }
+      catch (error)
+      {
+        console.error(error);
+      }
+
+
     }
 
 
