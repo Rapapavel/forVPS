@@ -199,12 +199,22 @@ async function getlead(leadid)
 {
   try
   {
+    /*
+    const bar = await crm.request.get('/api/v4/leads');
+    const circularJSON = require('circular-json');
+    var bar2 = circularJSON.stringify(bar);
 
+    var text = bar2.split('Bearer ').pop().split('\r\nContent-Type: application/json\r\nHost:')
+    var text = bar2.replace('Bearer ', '').replace('\r\nContent-Type', '')
+    console.log(bar.info)
+*/
 
-    const mytoken = await crm.connection.getToken();
+    //const mytoken1 = await crm.connection.getToken();
+    const mytoken = await crm.connection.refreshToken();
 
     const request = require('request');
-    var auth = 'Bearer ' + mytoken.access_token;
+    //var auth = 'Bearer ' + mytoken.access_token;
+    var auth = 'Bearer ' + mytoken.data.access_token;
     var adress = 'https://sortageru.amocrm.ru/api/v4/leads/' + leadid + '?with=contacts'
     var options = {
       url: adress,
@@ -223,7 +233,7 @@ async function getlead(leadid)
 
       try
       {
-        console.log(body);
+        console.log(body)
         var getuserid = body._embedded.contacts[0].id;
         const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
 
@@ -317,7 +327,7 @@ async function getlead(leadid)
 
 
         sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid, username, userphone, source, manager2_name);
-        //console.log(leadinfo.data);
+        //console.log(getuserid);
 
       }
       catch (error)
