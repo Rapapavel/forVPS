@@ -14,20 +14,12 @@ const crm = new AmoCRM({
 (async () => {
 try
 {
-
     const url = crm.connection.getAuthUrl();
-
     console.log({ url });
-
     const order1 = await crm.request.post('/api/v4/webhooks');
     const order = await crm.request.get('/api/v4/webhooks');
-    const order3 =  await crm.request.get('/api/v4/catalogs');
-    const order4 =  await crm.request.get('/api/v4/catalogs/7507/custom_fields');
 
-
-
-
-
+//express part
         const express = require( 'express' );
         const PORT = 80;
         const app = express()
@@ -35,8 +27,7 @@ try
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(bodyParser.json());
         app.post('/', function(req, res){
-        var resp = JSON.stringify(req.body); //преобразует в строку
-
+        var resp = JSON.stringify(req.body);
         var obj = JSON.parse(resp)
         var leadid = obj.leads.status[0].id;
 
@@ -45,102 +36,6 @@ try
         res.json({ message: 'goodbye'})
         })
         app.listen(PORT, () => console.log('SERVER STARTED ON PORT ' + PORT))
-
-
-
-
-  async function addElement()
-  {
-    const response = await crm.request.post( '/api/v2/catalog_elements',
-
-          {
-             add: [
-                {
-                   catalog_id: "7507" ,
-                   name: "Карандаш3",
-
-                   custom_fields: [
-                  {
-                     id: "854651" ,
-                     values: [
-                        {
-                           value: "abcd"
-                        }
-                     ]
-                  } ,
-                  {
-                     id: "854657" ,
-                     values: [
-                        {
-                           value: 1
-                        }
-                     ]
-                  }
-               ]
-
-                }
-             ]
-          }
-      )
-  }
-
-
-
-
-
-
-  async function updateElement()
-  {
-    const response = await crm.request.post( '/api/v2/catalog_elements',
-
-          {
-             update: [
-                {
-                   catalog_id: "7507" ,
-                   id: "226975",
-                   name: "Карандаш3333",
-
-                   custom_fields: [
-                  {
-                     id: "854651" ,
-                     values: [
-                        {
-                           value: "abcd"
-                        }
-                     ]
-                  } ,
-                  {
-                     id: "854657" ,
-                     values: [
-                        {
-                           value: 1
-                        }
-                     ]
-                  }
-               ]
-
-                }
-             ]
-          }
-      )
-  }
-
-
-  async function getElements()
-  {
-   const myarr =  await crm.request.get('/api/v4/catalogs/7507/elements');
-   var test = JSON.stringify(myarr.data._embedded);
-   var test2 = JSON.parse(test)
-
-   for (i = 0; i < test2.elements.length; i++)
-   {
-     console.log(test2.elements[i].name);
-   }
-
-  }
-
-
-
 }
 catch (error)
 {
@@ -149,10 +44,7 @@ catch (error)
 
 
 
-
-
 })();
-
 
 
 
@@ -163,7 +55,7 @@ function sendJson(manager_id, type_price, type_delivery, comment, manager_name, 
 var rp = require('request-promise');
 var options = {
     method: 'POST',
-    uri: 'https://script.google.com/macros/s/AKfycbxrEvhnzwEI2ZAHHua_a145a9ODLR3wXV-JP_TMl9tSFUTZ6gExK-nIQvc7k4O_MH95/exec',
+    uri: 'https://script.google.com/macros/s/AKfycbxEh4KAKUXtxxdVrSS2Q_p2ccKRehrNeZF68rNXYMhCe6oE2aQagiuGA5Y-4y3hjpFO/exec',
     body: {
         manager_id: manager_id,
         type_price: type_price,
@@ -188,8 +80,6 @@ rp(options)
     .catch(function (err) {
         // POST failed...
     });
-
-
 };
 
 
@@ -199,21 +89,8 @@ async function getlead(leadid)
 {
   try
   {
-    /*
-    const bar = await crm.request.get('/api/v4/leads');
-    const circularJSON = require('circular-json');
-    var bar2 = circularJSON.stringify(bar);
-
-    var text = bar2.split('Bearer ').pop().split('\r\nContent-Type: application/json\r\nHost:')
-    var text = bar2.replace('Bearer ', '').replace('\r\nContent-Type', '')
-    console.log(bar.info)
-*/
-
-    //const mytoken1 = await crm.connection.getToken();
     const mytoken = await crm.connection.refreshToken();
-
     const request = require('request');
-    //var auth = 'Bearer ' + mytoken.access_token;
     var auth = 'Bearer ' + mytoken.data.access_token;
     var adress = 'https://sortageru.amocrm.ru/api/v4/leads/' + leadid + '?with=contacts'
     var options = {
@@ -234,10 +111,8 @@ async function getlead(leadid)
       try
       {
         console.log(body)
-        var getuserid = body._embedded.contacts[0].id;
-        const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
-
-
+      var getuserid = body._embedded.contacts[0].id;
+      const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
 
       var username = null;
       var userphone = null;
@@ -251,7 +126,6 @@ async function getlead(leadid)
       {
         userphone = userinfo.data.custom_fields_values[0].values[0].value;
       }
-
 
 
        const leadinfo = await crm.request.get('/api/v4/leads/' + leadid);
@@ -309,8 +183,6 @@ async function getlead(leadid)
         }
       }
 
-
-
         let unix_timestamp = leadinfo.data.created_at;
         var date = new Date(unix_timestamp * 1000);
         var hours = date.getHours();
@@ -324,24 +196,16 @@ async function getlead(leadid)
         var manager2_name = null;
 
 
-
-
         sendJson(manager_id, type_price, type_delivery, comment, manager_name, data_created, comment_delivery, leadid, username, userphone, source, manager2_name);
-        //console.log(getuserid);
 
       }
       catch (error)
       {
         console.error(error);
       }
-
-
     }
 
-
-
   request(options, callback);
-
 
   }
   catch (error)
