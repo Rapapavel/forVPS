@@ -110,7 +110,7 @@ async function getlead(leadid)
 
       try
       {
-        console.log(body)
+       // console.log(body)
       var getuserid = body._embedded.contacts[0].id;
       const userinfo = await crm.request.get('/api/v4/contacts/' + getuserid);
 
