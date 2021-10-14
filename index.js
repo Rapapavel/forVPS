@@ -55,7 +55,7 @@ function sendJson(manager_id, type_price, type_delivery, comment, manager_name, 
 var rp = require('request-promise');
 var options = {
     method: 'POST',
-    uri: 'https://script.google.com/macros/s/AKfycbxEh4KAKUXtxxdVrSS2Q_p2ccKRehrNeZF68rNXYMhCe6oE2aQagiuGA5Y-4y3hjpFO/exec',
+    uri: 'https://script.google.com/macros/s/AKfycbz6BmFx_F78rFREnLisdQ6bRse2yOO3phF88vr97D-QVxLLDS0/exec',
     body: {
         manager_id: manager_id,
         type_price: type_price,
