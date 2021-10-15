@@ -29,9 +29,12 @@ try
         app.post('/', function(req, res){
         var resp = JSON.stringify(req.body);
         var obj = JSON.parse(resp)
-        var leadid = obj.leads.status[0].id;
-
-        getlead(leadid);
+        
+        if (obj.leads.status[0].id !== undefined)
+        {
+          var leadid = obj.leads.status[0].id;
+          getlead(leadid);
+        }
 
         res.json({ message: 'goodbye'})
         })
