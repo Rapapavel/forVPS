@@ -42,7 +42,7 @@ try
 }
 catch (error)
 {
-  console.error(error)
+  //console.error(error)
 }
 
 
@@ -204,7 +204,7 @@ async function getlead(leadid)
       }
       catch (error)
       {
-        console.error(error);
+        //console.error(error);
       }
     }
 
@@ -213,7 +213,7 @@ async function getlead(leadid)
   }
   catch (error)
   {
-    console.error(error);
+    //console.error(error);
   }
 
 }
